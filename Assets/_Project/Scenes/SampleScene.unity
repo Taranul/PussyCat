@@ -436,8 +436,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Amuse
   _minAmuse: 0
-  _maxAmuse: 100000
-  _amuseDecreaseSpeed: 500
+  _maxAmuse: 50
+  _amuseDecreasePerSecond: 5
 --- !u!114 &427768379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,7 +453,7 @@ MonoBehaviour:
   _amuse: {fileID: 427768378}
   _pointer: {fileID: 2077747824}
   _player: {fileID: 427768376}
-  _increaseSpeed: 100
+  _increaseSpeed: 3
 --- !u!114 &427768380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,9 +466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4310ce9ea2416d6488e8c20a9c738142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayersCharacter
-  _passiveBehaviour: {fileID: 0}
-  _distractedBehaviour: {fileID: 0}
-  _activeBehaviour: {fileID: 0}
 --- !u!1 &440129294
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,16 +728,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 461680696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d65ee837f0e5ce4881cbc1b012a3746, type: 3}
+  m_Script: {fileID: 11500000, guid: 296a5152bd0bd9e4da8497b9e91add9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextPopupSpawner
   _textPopupPrefab: {fileID: 5251991012796768884, guid: df1b44c71e58a694989af4f84bfdb8ae, type: 3}
   _amuseCounter: {fileID: 427768379}
   _pointer: {fileID: 2077747824}
   _canvas: {fileID: 461680700}
-  _spawnDelay: 0.2
-  _textLifeTime: 0.6
-  _velosityThreshold: 5
+  _spawnDelay: 0.5
+  _textLifeTime: 0.5
+  _velosityThreshold: 1
 --- !u!1 &477121031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,12 +1956,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483658049}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2009462624}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1522247969
 GameObject:
@@ -2517,6 +2514,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1744555313}
+  - {fileID: 1483658052}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2077747822
@@ -2635,4 +2633,3 @@ SceneRoots:
   - {fileID: 584465141}
   - {fileID: 2009462624}
   - {fileID: 2077747823}
-  - {fileID: 1483658052}

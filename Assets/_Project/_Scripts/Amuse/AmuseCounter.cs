@@ -5,15 +5,12 @@ public class AmuseCounter : MonoBehaviour
     [SerializeField] private Amuse _amuse;
     [SerializeField] private Pointer _pointer;
     [SerializeField] private Transform _player;
-    [SerializeField] private int _increaseSpeed;
+    [SerializeField] private float _increaseSpeed;
+
+    private readonly float _minDistance = 1f;
+    private readonly float _maxDistance = 100f;
 
     public float IncreasedAmuseAmount { get; private set; }
-
-    private void Awake()
-    {
-        // Temp:
-        Cursor.visible = false;
-    }
 
     private void Update()
     {
@@ -22,10 +19,16 @@ public class AmuseCounter : MonoBehaviour
 
     private void CalculateGeneratedAmuse()
     {
-        Vector2 distance = _pointer.Position - _player.position;
-        float value = distance.magnitude + _pointer.CurrentSpeed; // Тут я считерил с формулой. Она неверна.
-        int amuseAmount = (int)(value * Time.deltaTime * _increaseSpeed);
-        IncreasedAmuseAmount = amuseAmount;
-        _amuse.IncreaseTo(amuseAmount);
+        IncreasedAmuseAmount = CalculateGeneratedAmusePerSecond();
+        _amuse.IncreaseTo(IncreasedAmuseAmount);
+    }
+
+    private float CalculateGeneratedAmusePerSecond()
+    {
+        Vector2 playerToPointer = _pointer.Position - _player.position;
+        float clampedDistance = Mathf.Clamp(playerToPointer.magnitude, _minDistance, _maxDistance);
+        float generatedAmuse = _pointer.CurrentSpeed / clampedDistance;
+        float generatedAmusePerSecond = generatedAmuse * Time.deltaTime * _increaseSpeed;
+        return generatedAmusePerSecond;
     }
 }

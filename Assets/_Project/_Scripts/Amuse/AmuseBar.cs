@@ -26,7 +26,7 @@ public class AmuseBar : MonoBehaviour
         _amuse.OnAmuseChanged -= ChangeBarValue;
     }
 
-    private void ChangeBarValue(int newValue)
+    private void ChangeBarValue(float newValue)
     {
         _slider.value = newValue;
     }
