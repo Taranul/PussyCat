@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class AmuseCounter : MonoBehaviour
@@ -10,25 +11,46 @@ public class AmuseCounter : MonoBehaviour
     private readonly float _minDistance = 1f;
     private readonly float _maxDistance = 100f;
 
-    public float IncreasedAmuseAmount { get; private set; }
+    private Coroutine _coroutine;
+    private float _generatedAmusePerTime;
 
     private void Update()
     {
-        CalculateGeneratedAmuse();
+        _amuse.IncreaseTo(CalculateGeneratedAmusePerFrame());
     }
 
-    private void CalculateGeneratedAmuse()
+    public float CalculateGeneratedAmusePer(float timeInSeconds)
     {
-        IncreasedAmuseAmount = CalculateGeneratedAmusePerSecond();
-        _amuse.IncreaseTo(IncreasedAmuseAmount);
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(CalculateGeneratedAmuse(timeInSeconds));
+        }
+
+        return _generatedAmusePerTime;
     }
 
-    private float CalculateGeneratedAmusePerSecond()
+    private float CalculateGeneratedAmusePerFrame()
     {
         Vector2 playerToPointer = _pointer.Position - _player.position;
         float clampedDistance = Mathf.Clamp(playerToPointer.magnitude, _minDistance, _maxDistance);
         float generatedAmuse = _pointer.CurrentSpeed / clampedDistance;
-        float generatedAmusePerSecond = generatedAmuse * Time.deltaTime * _increaseSpeed;
-        return generatedAmusePerSecond;
+        float generatedAmusePerFrame = generatedAmuse * Time.deltaTime * _increaseSpeed;
+        return generatedAmusePerFrame;
+    }
+
+    private IEnumerator CalculateGeneratedAmuse(float timeInSeconds)
+    {
+        float generatedAmuse = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < timeInSeconds)
+        {
+            generatedAmuse += CalculateGeneratedAmusePerFrame();
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _coroutine = null;
+        _generatedAmusePerTime = generatedAmuse;
     }
 }

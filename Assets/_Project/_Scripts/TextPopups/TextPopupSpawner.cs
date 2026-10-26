@@ -1,37 +1,50 @@
+using System.Collections;
 using UnityEngine;
 
 public class TextPopupSpawner : MonoBehaviour
 {
+    [Header("Dependencies")]
     [SerializeField] private GameObject _textPopupPrefab;
     [SerializeField] private AmuseCounter _amuseCounter;
     [SerializeField] private Pointer _pointer;
-    [SerializeField] private Canvas _canvas;
-    [SerializeField] private float _spawnDelay;
-    [SerializeField] private float _textLifeTime;
-    [SerializeField] private float _velosityThreshold;
+    [SerializeField] private Canvas _canvasRoot;
 
-    private float _timeLeft;
+    [Header("Parameters")]
+    [SerializeField] private float _spawnInterval;
+    [SerializeField] private float _textLifeTime;
+    [SerializeField] private float _minimumPointerVelocityToSpawnText;
+
+    private Coroutine _coroutine;
 
     private void Update()
     {
-        if (_timeLeft <= 0 && _pointer.CurrentSpeed > _velosityThreshold)
-        {
-            _timeLeft = _spawnDelay;
+        TryToSpawnText();
+    }
 
-            Spawn();
-        }
+    private void TryToSpawnText()
+    {
+        if (_coroutine != null || _pointer.CurrentSpeed < _minimumPointerVelocityToSpawnText) return;
 
-        _timeLeft -= Time.deltaTime;
+        _coroutine = StartCoroutine(DelaySpawn());
+    }
+
+    private IEnumerator DelaySpawn()
+    {
+        yield return new WaitForSeconds(_spawnInterval);
+
+        Spawn();
+
+        _coroutine = null;
     }
 
     public void Spawn()
     {
-        string text = _amuseCounter.IncreasedAmuseAmount.ToString();
+        string number = _amuseCounter.CalculateGeneratedAmusePer(_spawnInterval).ToString("f2");
         Vector2 position = Camera.main.WorldToScreenPoint(_pointer.Position);
 
-        GameObject prefab = Instantiate(_textPopupPrefab, _canvas.transform);
+        GameObject prefab = Instantiate(_textPopupPrefab, _canvasRoot.transform);
         TextPopup textPopup = prefab.GetComponent<TextPopup>();
-        textPopup.Initialize(text, position);
+        textPopup.Initialize(number, position);
         Destroy(prefab, _textLifeTime);
     }
 }
